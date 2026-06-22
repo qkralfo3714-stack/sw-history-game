@@ -1,56 +1,154 @@
-<!-- ... existing code ... -->
+<!DOCTYPE html>
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>역사 인물 및 통치 기구 메모리 게임</title>
+    <title>역사 메모리 게임</title>
     <style>
-<!-- ... existing code ... -->
-</style>
-</head>
-<body>
+        @font-face {
+            font-family: 'RoundedFixedsys';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff') format('woff');
+            font-weight: normal;
+            font-display: swap;
+        }
 
-    <h1>🏰 역사 메모리 게임</h1>
-    
-    <div class="status-bar">
-<!-- ... existing code ... -->
-        /* 설명 카드 영역 (왼쪽) */
+        :root {
+            --bg-color: #2c3e50;
+            --panel-bg: #ecf0f1;
+            --border-color: #333;
+            --accent-color: #e74c3c;
+            --btn-color: #3498db;
+        }
+
+        body {
+            font-family: 'RoundedFixedsys', sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: var(--border-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #f1c40f;
+            text-shadow: 4px 4px 0px var(--border-color);
+            font-size: 2.5rem;
+            margin: 10px 0 20px 0;
+            text-align: center;
+        }
+
+        .status-bar {
+            background-color: var(--panel-bg);
+            border: 4px solid var(--border-color);
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            box-shadow: 5px 5px 0px var(--border-color);
+            margin-bottom: 20px;
+            border-radius: 8px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .message {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .btn-turn {
+            background-color: var(--btn-color);
+            color: white;
+            font-family: 'RoundedFixedsys', sans-serif;
+            font-size: 1.2rem;
+            border: 3px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 3px 3px 0px var(--border-color);
+            transition: transform 0.1s;
+        }
+
+        .btn-turn:hover {
+            transform: translateY(2px);
+            box-shadow: 1px 1px 0px var(--border-color);
+        }
+
+        .game-container {
+            display: flex;
+            gap: 20px;
+            max-width: 1300px;
+            width: 100%;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* 패널 공통 */
+        .panel {
+            background-color: var(--panel-bg);
+            border: 6px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 8px 8px 0px var(--border-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .panel h2 {
+            margin-top: 0;
+            border-bottom: 4px dashed var(--border-color);
+            padding-bottom: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 1.3rem;
+        }
+
+        /* 왼쪽 패널 (설명 카드) */
         .desc-panel {
             flex: 1;
-            max-width: 450px;
+            max-width: 400px;
         }
 
         .desc-grid {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
             width: 100%;
             max-height: 600px;
             overflow-y: auto;
             padding-right: 10px;
         }
 
-        /* 스크롤바 디자인 */
-        .desc-grid::-webkit-scrollbar, .term-grid::-webkit-scrollbar { width: 10px; }
-        .desc-grid::-webkit-scrollbar-track, .term-grid::-webkit-scrollbar-track { background: #ddd; border-left: 2px solid #333; }
-        .desc-grid::-webkit-scrollbar-thumb, .term-grid::-webkit-scrollbar-thumb { background: #333; }
+        .desc-grid::-webkit-scrollbar { width: 10px; }
+        .desc-grid::-webkit-scrollbar-track { background: #ddd; border-left: 2px solid #333; }
+        .desc-grid::-webkit-scrollbar-thumb { background: #333; }
 
         .desc-card {
-            border: 4px solid var(--border-color);
+            border: 3px solid var(--border-color);
             border-radius: 8px;
-            padding: 15px;
+            padding: 12px;
             cursor: pointer;
-            font-size: 1.1rem;
-            line-height: 1.4;
+            font-size: 1rem;
+            line-height: 1.3;
             transition: all 0.1s;
-            box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
-            position: relative;
+            box-shadow: 3px 3px 0px rgba(0,0,0,0.2);
             word-break: keep-all;
         }
 
-        .desc-card:hover {
-<!-- ... existing code ... -->
+        .desc-card:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0px rgba(0,0,0,0.2); }
+        .desc-card.selected { border-color: var(--accent-color); box-shadow: 0 0 0 4px var(--accent-color); transform: scale(1.02); }
+        
         .desc-card.matched {
-            opacity: 0.5;
+            opacity: 0.4;
             background-color: #bdc3c7 !important;
             cursor: default;
             pointer-events: none;
@@ -59,23 +157,24 @@
             text-decoration: line-through;
         }
 
-        /* 용어 카드 영역 (오른쪽 보드) */
+        /* 오른쪽 패널 (용어 카드) */
         .term-panel {
-            flex: 1.5;
-            display: flex;
-            flex-direction: column;
+            flex: 2;
         }
 
         .term-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
             width: 100%;
             max-height: 600px;
             overflow-y: auto;
             padding-right: 10px;
-            align-content: start;
         }
+
+        .term-grid::-webkit-scrollbar { width: 10px; }
+        .term-grid::-webkit-scrollbar-track { background: #ddd; border-left: 2px solid #333; }
+        .term-grid::-webkit-scrollbar-thumb { background: #333; }
 
         .term-card {
             width: 100%;
@@ -85,90 +184,276 @@
         }
 
         .term-card-inner {
-<!-- ... existing code ... -->
-        /* 카드 앞면 (용어가 적힌 상태) */
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.5s;
+            transform-style: preserve-3d;
+        }
+
+        .term-card.flipped .term-card-inner { transform: rotateY(180deg); }
+
+        .term-card-front, .term-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border: 3px solid var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            box-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+        }
+
+        .term-card-front {
+            background-color: var(--btn-color);
+            color: white;
+            font-size: 2rem;
+            background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0px, rgba(255,255,255,0.1) 5px, transparent 5px, transparent 10px);
+        }
+
         .term-card-back {
             background-color: white;
             transform: rotateY(180deg);
-            padding: 10px;
+            padding: 5px;
             text-align: center;
             word-break: keep-all;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
+            font-weight: bold;
         }
 
-        .term-card.matched .term-card-inner {
-<!-- ... existing code ... -->
-        @media (max-width: 900px) {
+        .term-card.matched { visibility: hidden; }
+
+        @media (max-width: 1000px) {
             .game-container { flex-direction: column; align-items: stretch; }
-            .desc-grid, .term-grid { max-height: 350px; }
+            .desc-grid { max-height: 250px; }
+            .term-grid { grid-template-columns: repeat(5, 1fr); max-height: 350px; }
+        }
+        @media (max-width: 600px) {
             .term-grid { grid-template-columns: repeat(4, 1fr); }
         }
-
-        @media (max-width: 500px) {
-            .term-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-
     </style>
-<!-- ... existing code ... -->
+</head>
+<body>
+
+    <h1>역사 메모리 게임</h1>
+    
+    <div class="status-bar">
+        <div>남은 쌍: <span id="remaining-count">34</span></div>
+        <div>뒤집은 카드: <span id="flip-count">0</span> / 4</div>
+        <div class="message" id="system-message">먼저 보드의 용어 카드를 최대 4장 뒤집으세요!</div>
+        <button class="btn-turn" onclick="endTurn()">다시 엎기 (턴 종료)</button>
+    </div>
+
+    <div class="game-container">
+        <!-- 왼쪽 패널 -->
+        <div class="panel desc-panel">
+            <h2>📜 나의 설명 카드</h2>
+            <div class="desc-grid" id="desc-grid"></div>
+        </div>
+
+        <!-- 오른쪽 패널 -->
+        <div class="panel term-panel">
+            <h2>❓ 뒤집혀 있는 용어 카드</h2>
+            <div class="term-grid" id="term-grid"></div>
+        </div>
+    </div>
+
     <script>
-        // 사진에서 추출한 카드 데이터
+        // 사진에서 추출한 34개의 전체 데이터
         const cardData = [
-            // 인물
-            { id: 1, term: "강수", desc: "외교 문서의 작성에 능숙한 통일 신라의 학자", color: "var(--card-pink)" },
-            { id: 2, term: "설총", desc: "이두를 체계적으로 정리한 통일 신라의 학자", color: "var(--card-yellow)" },
-            { id: 3, term: "김대문", desc: "신라의 문화를 주체적으로 인식한 통일 신라의 학자", color: "var(--card-green)" },
-            { id: 4, term: "최치원", desc: "시무 10여조를 건의한 통일 신라의 학자", color: "var(--card-blue)" },
-            { id: 5, term: "원효", desc: "일심 사상을 바탕으로 화쟁 사상을 주장하고 아미타 신앙을 전파한 통일 신라의 승려", color: "var(--card-purple)" },
-            { id: 6, term: "의상", desc: "화엄 사상을 주장하고 관음 신앙을 전파한 통일 신라의 승려", color: "var(--card-pink)" },
-            { id: 7, term: "혜초", desc: "왕오천축국전을 저술한 통일 신라의 승려", color: "var(--card-yellow)" },
-            { id: 8, term: "담징", desc: "종이와 먹 제조술을 일본에 전파해 준 고구려 사람", color: "var(--card-green)" },
-            { id: 9, term: "혜자", desc: "쇼토쿠 태자의 스승으로 활동한 고구려 사람", color: "var(--card-blue)" },
-            { id: 10, term: "아직기·왕인", desc: "한문과 논어를 일본에 전파해준 백제 사람", color: "var(--card-purple)" },
-            { id: 11, term: "노리사치계", desc: "불교를 일본에 전파해준 백제 사람", color: "var(--card-pink)" },
-            { id: 12, term: "태조", desc: "고려를 건국한 사람! 사심관 제도, 기인 제도 등을 실시함.", color: "var(--card-yellow)" },
-            { id: 13, term: "광종", desc: "공신과 호족을 숙청한 사람! 노비안검법, 과거제를 시행함.", color: "var(--card-green)" },
-            { id: 14, term: "성종", desc: "최승로의 시무 28조를 받아들여 유교 정치 이념을 채택한 사람! 12목에 지방관을 파견함.", color: "var(--card-blue)" },
-            { id: 15, term: "이자겸", desc: "경원 이씨 가문으로 왕실과의 거듭된 혼인을 통해 유력한 외척으로 성장한 사람. 척준경과 함께 반란함.", color: "var(--card-purple)" },
-            { id: 16, term: "묘청", desc: "서경 세력의 대표 인물로 풍수지리설을 기반으로 서경 천도를 주장함.", color: "var(--card-pink)" },
-            { id: 17, term: "망이·망소이", desc: "정중부 시기 공주 명학소에서 난을 일으킨 형제들", color: "var(--card-yellow)" },
-            { id: 18, term: "만적", desc: "최충헌 시기 신분 해방을 목적으로 봉기를 계획했던 사람", color: "var(--card-green)" },
-            // 통치 기구(조직)
-            { id: 19, term: "중서문하성", desc: "국가 정책을 논의하여 결정하는 최고 기구! 재신과 낭사로 구성되어 있음.", color: "var(--card-blue)" },
-            { id: 20, term: "상서성", desc: "국가 정책을 집행하는 기구! 아래의 6부를 두고 있음.", color: "var(--card-purple)" },
-            { id: 21, term: "중추원", desc: "국왕의 비서 기구! 추밀과 승선으로 구성되어 있음.", color: "var(--card-pink)" },
-            { id: 22, term: "어사대", desc: "관리의 비리를 살피고 정치의 잘잘못을 논의하는 기구", color: "var(--card-yellow)" },
-            { id: 23, term: "삼사", desc: "국가 재정의 출납과 회계를 담당하는 기구", color: "var(--card-green)" },
-            { id: 24, term: "도병마사", desc: "고려의 독자적인 기구! 주로 국방·군사 문제를 논의함.", color: "var(--card-blue)" },
-            { id: 25, term: "식목도감", desc: "고려의 독자적인 기구! 주로 제도와 시행규칙을 논의함.", color: "var(--card-purple)" },
-            { id: 26, term: "대간", desc: "간쟁, 봉박, 서경의 권한을 가지는 조직, 낭사와 어사대로 구성되어 있음.", color: "var(--card-pink)" },
-            { id: 27, term: "5도", desc: "일반 행정구역으로서 안찰사를 파견함. 아래에 주·군·현이 있음. 주현군이 주둔함.", color: "var(--card-yellow)" },
-            { id: 28, term: "양계", desc: "군사 행정구역으로 병마사를 파견함. 국방상 요충지에 진을 설치함. 주진군이 주둔함.", color: "var(--card-green)" },
-            { id: 29, term: "중방", desc: "무신들의 회의 기구", color: "var(--card-blue)" },
-            { id: 30, term: "교정도감", desc: "무신 정권 시기 국정을 총괄하는 최고 권력 기구", color: "var(--card-purple)" },
-            { id: 31, term: "정방", desc: "무신 정권 시기 관리의 인사 행정을 담당하는 기구", color: "var(--card-pink)" },
-            { id: 32, term: "서방", desc: "무신 정권 시기 문신의 숙위 기구", color: "var(--card-yellow)" },
-            { id: 33, term: "도방", desc: "무신 집권자의 사병 조직", color: "var(--card-green)" },
-            { id: 34, term: "삼별초", desc: "좌별초, 우별초, 신의군으로 구성된 군대", color: "var(--card-blue)" }
+            { id: 1, term: "강수", desc: "외교 문서의 작성에 능숙한 통일 신라의 학자" },
+            { id: 2, term: "설총", desc: "이두를 체계적으로 정리한 통일 신라의 학자" },
+            { id: 3, term: "김대문", desc: "신라의 문화를 주체적으로 인식한 통일 신라의 학자" },
+            { id: 4, term: "최치원", desc: "시무 10여조를 건의한 통일 신라의 학자" },
+            { id: 5, term: "원효", desc: "일심 사상을 바탕으로 화쟁 사상을 주장하고 아미타 신앙을 전파한 통일 신라의 승려" },
+            { id: 6, term: "의상", desc: "화엄 사상을 주장하고 관음 신앙을 전파한 통일 신라의 승려" },
+            { id: 7, term: "혜초", desc: "왕오천축국전을 저술한 통일 신라의 승려" },
+            { id: 8, term: "담징", desc: "종이와 먹 제조술을 일본에 전파해 준 고구려 사람" },
+            { id: 9, term: "혜자", desc: "쇼토쿠 태자의 스승으로 활동한 고구려 사람" },
+            { id: 10, term: "아직기·왕인", desc: "한문과 논어를 일본에 전파해준 백제 사람" },
+            { id: 11, term: "노리사치계", desc: "불교를 일본에 전파해준 백제 사람" },
+            { id: 12, term: "태조", desc: "고려를 건국한 사람! 사심관 제도, 기인 제도 등을 실시함." },
+            { id: 13, term: "광종", desc: "공신과 호족을 숙청한 사람! 노비안검법, 과거제를 시행함." },
+            { id: 14, term: "성종", desc: "최승로의 시무 28조를 받아들여 유교 정치 이념을 채택한 사람! 12목에 지방관을 파견함." },
+            { id: 15, term: "이자겸", desc: "경원 이씨 가문으로 왕실과의 거듭된 혼인을 통해 유력한 외척으로 성장한 사람. 척준경과 함께 반란함." },
+            { id: 16, term: "묘청", desc: "서경 세력의 대표 인물로 풍수지리설을 기반으로 서경 천도를 주장함." },
+            { id: 17, term: "망이·망소이", desc: "정중부 시기 공주 명학소에서 난을 일으킨 형제들" },
+            { id: 18, term: "만적", desc: "최충헌 시기 신분 해방을 목적으로 봉기를 계획했던 사람" },
+            { id: 19, term: "중서문하성", desc: "국가 정책을 논의하여 결정하는 최고 기구! 재신과 낭사로 구성되어 있음." },
+            { id: 20, term: "상서성", desc: "국가 정책을 집행하는 기구! 아래의 6부를 두고 있음." },
+            { id: 21, term: "중추원", desc: "국왕의 비서 기구! 추밀과 승선으로 구성되어 있음." },
+            { id: 22, term: "어사대", desc: "관리의 비리를 살피고 정치의 잘잘못을 논의하는 기구" },
+            { id: 23, term: "삼사", desc: "국가 재정의 출납과 회계를 담당하는 기구" },
+            { id: 24, term: "도병마사", desc: "고려의 독자적인 기구! 주로 국방·군사 문제를 논의함." },
+            { id: 25, term: "식목도감", desc: "고려의 독자적인 기구! 주로 제도와 시행규칙을 논의함." },
+            { id: 26, term: "대간", desc: "간쟁, 봉박, 서경의 권한을 가지는 조직, 낭사와 어사대로 구성되어 있음." },
+            { id: 27, term: "5도", desc: "일반 행정구역으로서 안찰사를 파견함. 아래에 주·군·현이 있음. 주현군이 주둔함." },
+            { id: 28, term: "양계", desc: "군사 행정구역으로 병마사를 파견함. 국방상 요충지에 진을 설치함. 주진군이 주둔함." },
+            { id: 29, term: "중방", desc: "무신들의 회의 기구" },
+            { id: 30, term: "교정도감", desc: "무신 정권 시기 국정을 총괄하는 최고 권력 기구" },
+            { id: 31, term: "정방", desc: "무신 정권 시기 관리의 인사 행정을 담당하는 기구" },
+            { id: 32, term: "서방", desc: "무신 정권 시기 문신의 숙위 기구" },
+            { id: 33, term: "도방", desc: "무신 집권자의 사병 조직" },
+            { id: 34, term: "삼별초", desc: "좌별초, 우별초, 신의군으로 구성된 군대" }
         ];
 
+        // 파스텔 색상 배열 (설명 카드 배경)
+        const colors = ["#ffb3ba", "#ffffba", "#baffc9", "#bae1ff", "#e2cbff", "#fce4ec", "#e8f5e9", "#fff9c4", "#e3f2fd"];
+
         let selectedDescId = null;
-        let isProcessing = false;
+        let activeFlippedCards = []; // 현재 뒤집힌 용어 카드 배열
         let remainingPairs = cardData.length;
         const msgEl = document.getElementById('system-message');
-<!-- ... existing code ... -->
+        const flipCountEl = document.getElementById('flip-count');
+
+        function shuffle(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
         function initGame() {
             const descGrid = document.getElementById('desc-grid');
             const termGrid = document.getElementById('term-grid');
             
-            document.getElementById('remaining-count').innerText = remainingPairs;
-
-            // 1. 설명 카드 렌더링 (그대로 나열)
-            cardData.forEach(data => {
+            // 설명 카드 렌더링
+            cardData.forEach((data, index) => {
                 const descCard = document.createElement('div');
                 descCard.className = 'desc-card';
-                descCard.style.backgroundColor = data.color;
+                descCard.style.backgroundColor = colors[index % colors.length];
                 descCard.innerText = data.desc;
                 descCard.dataset.id = data.id;
                 
                 descCard.addEventListener('click', () => {
-<!-- ... existing code ... -->
+                    if (descCard.classList.contains('matched')) return;
+                    
+                    document.querySelectorAll('.desc-card').forEach(c => c.classList.remove('selected'));
+                    descCard.classList.add('selected');
+                    selectedDescId = data.id;
+                    msgEl.innerText = "설명 카드를 선택했습니다. 뒤집힌 용어 카드 중 알맞은 짝을 클릭하세요!";
+                    msgEl.style.color = "#8e44ad";
+                });
+                descGrid.appendChild(descCard);
+            });
+
+            // 용어 카드 렌더링
+            const shuffledTerms = shuffle([...cardData]);
+            shuffledTerms.forEach((data, index) => {
+                const termCard = document.createElement('div');
+                termCard.className = 'term-card';
+                termCard.dataset.id = data.id;
+                
+                const inner = document.createElement('div');
+                inner.className = 'term-card-inner';
+                
+                const front = document.createElement('div');
+                front.className = 'term-card-front';
+                front.innerText = "?";
+                
+                const back = document.createElement('div');
+                back.className = 'term-card-back';
+                back.innerText = data.term;
+                
+                // 앞면(단어) 색상은 설명카드와 세트 색상으로
+                const originalIndex = cardData.findIndex(item => item.id === data.id);
+                back.style.backgroundColor = colors[originalIndex % colors.length];
+                
+                inner.appendChild(front);
+                inner.appendChild(back);
+                termCard.appendChild(inner);
+                
+                termCard.addEventListener('click', () => handleTermClick(termCard, data.id));
+                termGrid.appendChild(termCard);
+            });
+        }
+
+        function handleTermClick(termCard, termId) {
+            if (termCard.classList.contains('matched')) return;
+
+            // 이미 뒤집혀 있는 상태일 때 (매칭 시도)
+            if (termCard.classList.contains('flipped')) {
+                if (!selectedDescId) {
+                    msgEl.innerText = "❌ 설명 카드를 먼저 클릭해서 선택해 주세요!";
+                    msgEl.style.color = "var(--accent-color)";
+                    return;
+                }
+
+                // 짝이 맞는지 확인
+                if (termId === selectedDescId) {
+                    // 매칭 성공
+                    termCard.classList.add('matched');
+                    const selectedDesc = document.querySelector('.desc-card.selected');
+                    selectedDesc.classList.remove('selected');
+                    selectedDesc.classList.add('matched');
+                    
+                    // 활성 뒤집힘 배열에서 제거
+                    activeFlippedCards = activeFlippedCards.filter(card => card !== termCard);
+                    updateFlipCount();
+
+                    selectedDescId = null;
+                    remainingPairs--;
+                    document.getElementById('remaining-count').innerText = remainingPairs;
+                    
+                    msgEl.innerText = "✅ 정답입니다! 짝을 찾았습니다.";
+                    msgEl.style.color = "#2980b9";
+
+                    if (remainingPairs === 0) {
+                        msgEl.innerText = "🎉 모든 카드를 맞추셨습니다! 🎉";
+                        alert("축하합니다! 게임을 클리어했습니다!");
+                    }
+                } else {
+                    // 매칭 실패
+                    msgEl.innerText = "틀렸습니다. 다른 카드를 찾아보세요.";
+                    msgEl.style.color = "var(--accent-color)";
+                    // 선택만 해제
+                    document.querySelector('.desc-card.selected').classList.remove('selected');
+                    selectedDescId = null;
+                }
+            } 
+            // 뒤집혀 있지 않은 상태일 때 (카드 까보기)
+            else {
+                if (activeFlippedCards.length >= 4) {
+                    msgEl.innerText = "최대 4장까지만 미리 뒤집어 볼 수 있습니다! 짝을 맞추거나 '다시 엎기'를 누르세요.";
+                    msgEl.style.color = "var(--accent-color)";
+                    return;
+                }
+                termCard.classList.add('flipped');
+                activeFlippedCards.push(termCard);
+                updateFlipCount();
+                msgEl.innerText = "카드를 뒤집었습니다.";
+                msgEl.style.color = "#27ae60";
+            }
+        }
+
+        function endTurn() {
+            // 현재 뒤집혀 있는 카드들 모두 엎기
+            activeFlippedCards.forEach(card => {
+                card.classList.remove('flipped');
+            });
+            activeFlippedCards = [];
+            updateFlipCount();
+            
+            // 설명 카드 선택 해제
+            const selectedDesc = document.querySelector('.desc-card.selected');
+            if (selectedDesc) selectedDesc.classList.remove('selected');
+            selectedDescId = null;
+
+            msgEl.innerText = "턴을 넘겼습니다. 새로운 카드를 뒤집어보세요!";
+            msgEl.style.color = "#34495e";
+        }
+
+        function updateFlipCount() {
+            flipCountEl.innerText = activeFlippedCards.length;
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>
